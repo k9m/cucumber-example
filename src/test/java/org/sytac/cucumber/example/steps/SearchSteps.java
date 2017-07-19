@@ -5,7 +5,6 @@ import cucumber.api.java.en.Then;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
-import org.springframework.http.HttpEntity;
 import org.sytac.cucumber.example.model.SearchResults;
 import org.sytac.cucumber.example.model.User;
 import org.sytac.cucumber.example.util.RestClient;
@@ -39,10 +38,10 @@ public class SearchSteps {
         final Map<String, String> params = new HashMap<>();
         params.put(param, value);
 
-        final HttpEntity<SearchResults> response = restClient.get(findByPath, params, SearchResults.class);
+        final SearchResults searchResults = restClient.get(findByPath, params, SearchResults.class).getBody();
 
         final List<User> expectedUsers = table.asList(User.class);
-        final List<User> retrievedUsers = response.getBody().getEmbedded().getUsers();
+        final List<User> retrievedUsers = searchResults.getEmbedded().getUsers();
 
         validateExpectedUsers(expectedUsers, retrievedUsers);
 
@@ -53,11 +52,7 @@ public class SearchSteps {
         expectedUsers.forEach(eu -> {
             User foundUser = retrievedUsers.stream().filter(ru -> eu.getEmail().equals(ru.getEmail())).findAny().orElse(null);
             if(foundUser != null){
-                assertEquals(eu.getFirstName(), foundUser.getFirstName());
-                assertEquals(eu.getLastName(), foundUser.getLastName());
-                assertEquals(eu.getEmail(), foundUser.getEmail());
-                assertEquals(eu.getPassword(), foundUser.getPassword());
-
+                assertEquals(eu, foundUser);
                 nrFound.incrementAndGet();
             }
         });

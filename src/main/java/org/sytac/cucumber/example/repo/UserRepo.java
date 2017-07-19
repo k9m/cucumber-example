@@ -9,4 +9,5 @@ import java.util.List;
 public interface UserRepo extends PagingAndSortingRepository<User, Long> {
 
     List<User> findByEmail(@Param("email") String email);
+    List<User> findAllBy();
 }

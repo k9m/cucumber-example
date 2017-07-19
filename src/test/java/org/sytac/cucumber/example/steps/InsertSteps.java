@@ -8,10 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
-import org.springframework.http.ResponseEntity;
+import org.sytac.cucumber.example.model.SearchResults;
 import org.sytac.cucumber.example.model.User;
 import org.sytac.cucumber.example.repo.UserRepo;
 import org.sytac.cucumber.example.util.RestClient;
+
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -41,15 +43,18 @@ public class InsertSteps {
 
     @Then("^there should be (\\d+) users present in the system$")
     public void thereShouldBeUsersPresentInTheSystem(int nrExpectedUsers){
-        assertEquals(nrExpectedUsers, userRepo.count());
+        final String endpoint = String.format("http://localhost:%d/users/search/findAllBy", serverPort);
+
+        final SearchResults searchResults = restClient.get(endpoint, new HashMap<>(), SearchResults.class).getBody();
+        assertEquals(nrExpectedUsers, searchResults.getEmbedded().getUsers().size());
     }
 
     @Given("^the following users are present in the system$")
     public void insertRows(final DataTable table){
         table.asList(User.class).forEach(user -> {
-            log.info("{}", user);
             User savedUser = userRepo.save(user);
             assertNotNull(savedUser.getId());
+            assertEquals(user, savedUser);
         });
     }
 
@@ -58,11 +63,11 @@ public class InsertSteps {
         final String registerPath = String.format("http://localhost:%d/users/register", serverPort);
 
         table.asList(User.class).forEach(user -> {
-            ResponseEntity<User> savedUser = restClient.post(registerPath, user, User.class);
-            User retrievedUser = userRepo.findOne(savedUser.getBody().getId());
+            User savedUser = restClient.post(registerPath, user, User.class).getBody();
+            User retrievedUser = userRepo.findOne(savedUser.getId());
 
-            assertNotNull(savedUser.getBody().getId());
-            assertEquals(savedUser.getBody(), retrievedUser);
+            assertNotNull(savedUser.getId());
+            assertEquals(savedUser, retrievedUser);
         });
     }
 
