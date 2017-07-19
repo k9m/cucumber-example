@@ -23,12 +23,12 @@
 		<snapshotRepository>
 			<id>snapshots</id>
 			<name>My internal repository</name>
-			<url>http://192.168.178.220:8081/repository/maven-snapshots/</url>
+			<url>http://dev:8081/repository/maven-snapshots/</url>
 		</snapshotRepository>
 		<repository>
 			<id>releases</id>
 			<name>My internal repository</name>
-			<url>http://192.168.178.220:8081/repository/maven-releases/</url>
+			<url>http://dev:8081/repository/maven-releases/</url>
 		</repository>
 	</distributionManagement>
 
@@ -114,7 +114,37 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/*AppTests.java</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<phase>integration-test</phase>
+						<configuration>
+							<excludes>
+								<exclude>none</exclude>
+							</excludes>
+							<includes>
+								<include>**/*AppTests.java</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
+
+
 	</build>
 
 
