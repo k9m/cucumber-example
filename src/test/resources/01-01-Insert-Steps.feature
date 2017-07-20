@@ -24,5 +24,8 @@ Feature: Testing Insert and Search features
     # - Search by firstName (this should return more than one results)
     # - Rejecting registration if email already exists
     # - Rejecting registration if data is not sane
+    # - Perhaps only providing the test harness and let them to implement the app
+    # - Or build up their tests on their on
+    # - Or have a story defined and build the feature file together + glue themselves
 
 
