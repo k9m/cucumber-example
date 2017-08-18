@@ -13,6 +13,7 @@
 
 	<modules>
 		<module>cucumber-example-java</module>
+		<module>cucumber-example-kotlin</module>
 	</modules>
 
 	<properties>

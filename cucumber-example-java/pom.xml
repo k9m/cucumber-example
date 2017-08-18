@@ -9,9 +9,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.sytac.cucumber.example.java</groupId>
+	<groupId>org.sytac.cucumber.example</groupId>
 	<artifactId>cucumber-example-java</artifactId>
-
 	<name>cucumber-example-java</name>
 	<description>Sytac - Cucumber Example Project - Java Flavour</description>
 
@@ -36,17 +35,6 @@
 		</repository>
 	</distributionManagement>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>1.5.1.RELEASE</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
